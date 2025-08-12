@@ -20,13 +20,22 @@
         </script>
 
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
-        <style>
+        {{-- <style>
             html {
                 background-color: oklch(1 0 0);
             }
 
             html.dark {
                 background-color: oklch(0.145 0 0);
+            }
+        </style> --}}
+        <!-- Inline style to match bootstrap-custom.scss -->
+        <style>
+            html {
+                background-color: #ffffff; /* Matches $body-bg in bootstrap-custom.scss */
+            }
+            html.dark {
+                background-color: #212529; /* Matches dark mode in bootstrap-custom.scss */
             }
         </style>
 
@@ -43,7 +52,8 @@
         @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    {{-- FOR TAILWIND <body class="font-sans antialiased"> --}}
+    <body>
         @inertia
     </body>
 </html>

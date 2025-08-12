@@ -1,0 +1,30 @@
+// // Override Bootstrap variables
+// $primary: #007bff; /* Example: Customize primary color */
+// $font-family-base: 'Instrument Sans', sans-serif; /* Keep the default font */
+
+// @import 'bootstrap/scss/bootstrap';
+
+// Override Bootstrap variables
+$font-family-base: 'Instrument Sans', sans-serif; // Match Laravel’s default font
+$primary: #007bff; // Bootstrap’s default primary color (customize as needed)
+$body-bg: #ffffff; // Light mode background
+$body-color: #212529; // Default text color
+$input-border-color: #ced4da; // Match Bootstrap’s input borders
+
+// Dark mode overrides
+.dark {
+    $body-bg: #212529; // Dark mode background
+    $body-color: #f8f9fa; // Light text for dark mode
+}
+
+// Import Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// Additional custom styles
+html {
+    background-color: $body-bg;
+}
+
+html.dark {
+    background-color: #212529;
+}

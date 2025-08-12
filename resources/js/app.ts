@@ -1,4 +1,6 @@
-import '../css/app.css';
+// import '../css/app.css';
+import '../css/bootstrap-custom.scss';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Add Bootstrap JS
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -19,7 +21,8 @@ createInertiaApp({
             .mount(el);
     },
     progress: {
-        color: '#4B5563',
+        // color: '#4B5563',
+        color: '#007bff', // Match Bootstrap’s primary color
     },
 });
 
