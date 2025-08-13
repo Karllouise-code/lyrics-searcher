@@ -13,7 +13,7 @@
                     placeholder="Search lyrics (e.g., Adele Hello)"
                     aria-label="Search lyrics"
                 />
-                <button @click="search" class="btn btn-primary">Search</button>
+                <button @click="search" class="btn btn-primary text-white">Search</button>
             </div>
             <ul v-if="suggestions.length" class="list-group mb-3" style="max-height: 200px; overflow-y: auto">
                 <li v-for="sug in suggestions" :key="sug.id" class="list-group-item list-group-item-action" @click="selectSuggestion(sug)">
