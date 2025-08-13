@@ -8,8 +8,9 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'LyriSearch';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),

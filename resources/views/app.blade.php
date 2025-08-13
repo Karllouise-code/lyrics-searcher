@@ -19,27 +19,19 @@
             })();
         </script>
 
-        {{-- Inline style to set the HTML background color based on our theme in app.css --}}
-        {{-- <style>
-            html {
-                background-color: oklch(1 0 0);
-            }
-
-            html.dark {
-                background-color: oklch(0.145 0 0);
-            }
-        </style> --}}
         <!-- Inline style to match bootstrap-custom.scss -->
         <style>
-            html {
-                background-color: #ffffff; /* Matches $body-bg in bootstrap-custom.scss */
+            html, body {
+                height: 100%;
+                margin: 0;
+                background-color: #ffffff;
             }
             html.dark {
-                background-color: #212529; /* Matches dark mode in bootstrap-custom.scss */
+                background-color: #212529;
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'LyriSearch') }}</title>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -52,7 +44,7 @@
         @vite(['resources/js/app.ts', "resources/js/pages/{$page['component']}.vue"])
         @inertiaHead
     </head>
-    {{-- FOR TAILWIND <body class="font-sans antialiased"> --}}
+
     <body>
         @inertia
     </body>
