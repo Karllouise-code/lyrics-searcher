@@ -7,8 +7,9 @@ use Inertia\Inertia;
 //     return Inertia::render('Welcome');
 // })->name('home');
 
-Route::get('/', fn () => Inertia::render('Search'));
-Route::get('/favorites', fn () => Inertia::render('Favorites'));
+Route::get('/', fn () => Inertia::render('Search'))->name('search');
+Route::get('/favorites', fn () => Inertia::render('Favorites'))->middleware(['auth'])->name('favorites');
+Route::get('/dashboard', fn () => Inertia::render('Dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::get('dashboard', function () {

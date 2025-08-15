@@ -1,57 +1,53 @@
 <script setup lang="ts">
+import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
-import NavUser from '@/components/NavUser.vue';
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
-import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
+const navItems = [
+    { title: 'Search', href: '/', icon: 'bi bi-search' },
+    { title: 'Favorites', href: '/favorites', icon: 'bi bi-heart-fill', protected: true },
+    { title: 'Dashboard', href: '/dashboard', icon: 'bi bi-house', protected: true },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
+const footerItems = [
+    { title: 'GitHub', href: 'https://github.com/Karllouise-code/lyrics-searcher', icon: 'bi bi-github' },
+    { title: 'Twitter', href: 'https://twitter.com/karl_rito', icon: 'bi bi-twitter' },
 ];
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
-                            <AppLogo />
-                        </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </SidebarHeader>
-
-        <SidebarContent>
-            <NavMain :items="mainNavItems" />
-        </SidebarContent>
-
-        <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
-            <NavUser />
-        </SidebarFooter>
-    </Sidebar>
-    <slot />
+    <div class="offcanvas offcanvas-start d-lg-block" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarLabel">
+                <Link :href="route('search')">
+                    <AppLogoIcon style="width: 36px; height: 36px" />
+                    <span class="ms-2">LyriSearch</span>
+                </Link>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0">
+            <NavMain :items="navItems" variant="sidebar" />
+            <div class="mt-auto">
+                <NavFooter :items="footerItems" />
+            </div>
+        </div>
+    </div>
 </template>
+
+<style scoped>
+.offcanvas {
+    width: 300px !important;
+}
+@media (min-width: 992px) {
+    .offcanvas {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        z-index: 100;
+        transform: none;
+        visibility: visible;
+    }
+}
+</style>

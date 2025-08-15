@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthBase from '@/layouts/AuthLayout.vue';
-import { Head, useForm } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
+import AuthSimpleLayout from '@/layouts/auth/AuthSimpleLayout.vue';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 
 const form = useForm({
     name: '',
@@ -23,61 +18,80 @@ const submit = () => {
 </script>
 
 <template>
-    <AuthBase title="Create an account" description="Enter your details below to create your account">
+    <AuthSimpleLayout title="Sign up" description="Create an account to start searching lyrics">
         <Head title="Register" />
 
-        <form method="POST" @submit.prevent="submit" class="flex flex-col gap-6">
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input id="name" type="text" required autofocus :tabindex="1" autocomplete="name" v-model="form.name" placeholder="Full name" />
-                    <InputError :message="form.errors.name" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
-                    <InputError :message="form.errors.email" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        :tabindex="3"
-                        autocomplete="new-password"
-                        v-model="form.password"
-                        placeholder="Password"
-                    />
-                    <InputError :message="form.errors.password" />
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
-                    <Input
-                        id="password_confirmation"
-                        type="password"
-                        required
-                        :tabindex="4"
-                        autocomplete="new-password"
-                        v-model="form.password_confirmation"
-                        placeholder="Confirm password"
-                    />
-                    <InputError :message="form.errors.password_confirmation" />
-                </div>
-
-                <Button type="submit" class="mt-2 w-full" tabindex="5" :disabled="form.processing">
-                    <LoaderCircle v-if="form.processing" class="h-4 w-4 animate-spin" />
-                    Create account
-                </Button>
+        <form @submit.prevent="submit">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input
+                    id="name"
+                    v-model="form.name"
+                    type="text"
+                    class="form-control"
+                    placeholder="Your Name"
+                    required
+                    autofocus
+                    tabindex="1"
+                    autocomplete="name"
+                />
+                <InputError :message="form.errors.name" class="mt-1" />
             </div>
 
-            <div class="text-center text-sm text-muted-foreground">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input
+                    id="email"
+                    v-model="form.email"
+                    type="email"
+                    class="form-control"
+                    placeholder="email@example.com"
+                    required
+                    tabindex="2"
+                    autocomplete="email"
+                />
+                <InputError :message="form.errors.email" class="mt-1" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                    id="password"
+                    v-model="form.password"
+                    type="password"
+                    class="form-control"
+                    placeholder="Password"
+                    required
+                    tabindex="3"
+                    autocomplete="new-password"
+                />
+                <InputError :message="form.errors.password" class="mt-1" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password_confirmation" class="form-label">Confirm Password</label>
+                <input
+                    id="password_confirmation"
+                    v-model="form.password_confirmation"
+                    type="password"
+                    class="form-control"
+                    placeholder="Confirm Password"
+                    required
+                    tabindex="4"
+                    autocomplete="new-password"
+                />
+                <InputError :message="form.errors.password_confirmation" class="mt-1" />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" tabindex="5" :disabled="form.processing">
+                <span v-if="form.processing" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Sign up
+            </button>
+
+            <div class="small mt-3 text-center">
                 Already have an account?
-                <TextLink :href="route('login')" class="underline underline-offset-4" :tabindex="6">Log in</TextLink>
+                <Link :href="route('login')" class="text-decoration-none">Log in</Link>
             </div>
         </form>
-    </AuthBase>
+    </AuthSimpleLayout>
 </template>

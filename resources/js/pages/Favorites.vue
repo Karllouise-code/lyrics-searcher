@@ -1,38 +1,71 @@
-<template>
-    <div class="d-flex flex-column min-vh-100">
-        <NavMain :items="navItems" />
-        <div class="container flex-grow-1 py-4">
-            <h1 class="mb-3">Favorites</h1>
-            <ul class="list-group">
-                <li v-for="fav in favorites" :key="fav.id" class="list-group-item">
-                    {{ fav.title }} by {{ fav.artist }}
-                    <button class="btn btn-sm btn-danger float-end" disabled>Remove</button>
-                </li>
-            </ul>
-            <div v-if="!favorites.length" class="alert alert-info mt-3">No favorites added yet.</div>
-        </div>
-        <NavFooter :items="footerItems" />
-    </div>
-</template>
-
-<script setup>
+<script setup lang="ts">
+import AppLayout from '@/layouts/AppLayout.vue';
+import { Head } from '@inertiajs/vue3';
+import axios from 'axios';
 import { ref } from 'vue';
-import NavFooter from '../components/NavFooter.vue';
-import NavMain from '../components/NavMain.vue';
 
-const navItems = [
-    { title: 'Search', href: '/', icon: 'bi bi-search' },
-    { title: 'Favorites', href: '/favorites', icon: 'bi bi-heart-fill' },
-];
+const favorites = ref<{ id: number; artist: string; title: string }[]>([]);
+const error = ref<string | null>(null);
 
-const footerItems = [
-    { title: 'GitHub', href: 'https://github.com/Karllouise-code/lyrics-searcher', icon: 'bi bi-github' },
-    { title: 'Twitter', href: 'https://twitter.com/karl_rito', icon: 'bi bi-twitter' },
-];
+const fetchFavorites = async () => {
+    try {
+        const { data } = await axios.post('/graphql', {
+            query: `
+                query {
+                    favorites {
+                        id
+                        artist
+                        title
+                    }
+                }
+            `,
+        });
+        favorites.value = data.data.favorites;
+    } catch (e: any) {
+        error.value = e.message.includes('authorization') ? 'Please log in to view favorites' : 'Error fetching favorites';
+    }
+};
 
-// Mock data for favorites
-const favorites = ref([
-    { id: 1, artist: 'Adele', title: 'Hello' },
-    { id: 2, artist: 'The Beatles', title: 'Hey Jude' },
-]);
+const removeFavorite = async (id: number) => {
+    try {
+        await axios.post('/graphql', {
+            query: `
+                mutation ($id: ID!) {
+                    removeFavorite(id: $id) {
+                        id
+                    }
+                }
+            `,
+            variables: { id },
+        });
+        favorites.value = favorites.value.filter((fav) => fav.id !== id);
+    } catch {
+        error.value = 'Error removing favorite';
+    }
+};
+
+fetchFavorites();
 </script>
+
+<template>
+    <Head title="Favorites" />
+    <AppLayout :breadcrumbs="[{ title: 'Favorites', href: '/favorites' }]">
+        <div class="container py-4">
+            <h1 class="mb-3">Favorites</h1>
+            <div v-if="error" class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            <div v-if="favorites.length" class="row g-4">
+                <div v-for="fav in favorites" :key="fav.id" class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ fav.artist }} - {{ fav.title }}</h5>
+                            <button class="btn btn-danger btn-sm" @click="removeFavorite(fav.id)">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-else class="alert alert-info" role="alert">No favorites yet.</div>
+        </div>
+    </AppLayout>
+</template>

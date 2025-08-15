@@ -1,26 +1,28 @@
-<template>
-    <footer class="bg-light mt-4 py-4 text-center">
-        <div class="container">
-            <p>&copy; {{ new Date().getFullYear() }} Lyrics Searcher</p>
-            <ul v-if="items.length" class="list-inline mt-2">
-                <li v-for="item in items" :key="item.title" class="list-inline-item">
-                    <a :href="item.href" target="_blank" rel="noopener noreferrer" class="text-primary">
-                        <i v-if="item.icon" :class="item.icon" class="me-1"></i>
-                        {{ item.title }}
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </footer>
-</template>
-
 <script setup lang="ts">
 import type { NavItem } from '@/types';
 
-interface Props {
-    items?: NavItem[];
-    class?: string;
-}
-
-defineProps<Props>();
+defineProps<{
+    items: NavItem[];
+}>();
 </script>
+
+<template>
+    <nav class="nav flex-column px-3 py-2">
+        <div class="list-group list-group-flush">
+            <a v-for="item in items" :key="item.title" :href="item.href" class="list-group-item list-group-item-action" target="_blank">
+                <i v-if="item.icon" :class="item.icon" class="me-2"></i>
+                {{ item.title }}
+            </a>
+        </div>
+    </nav>
+</template>
+
+<style scoped>
+.list-group-item {
+    border: none;
+    padding: 0.5rem 1rem;
+}
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
+</style>
