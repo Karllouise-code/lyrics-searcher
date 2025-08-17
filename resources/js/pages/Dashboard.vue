@@ -1,19 +1,8 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-// import { Head, Link } from '@inertiajs/vue3';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 
 const breadcrumbs = [{ title: 'Dashboard', href: '/dashboard' }];
-
-const form = useForm({});
-
-const logout = () => {
-    form.post(route('logout'), {
-        onSuccess: () => {
-            form.reset();
-        },
-    });
-};
 </script>
 
 <template>
@@ -32,7 +21,7 @@ const logout = () => {
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">Quick Actions</h5>
-                        <p class="card-text">
+                        <p class="card-text mt-3">
                             <a href="/favorites" class="btn btn-primary btn-sm">View Favorites</a>
                         </p>
                     </div>
@@ -46,9 +35,6 @@ const logout = () => {
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="mt-4">
-            <button class="btn btn-danger" :disabled="form.processing" @click="logout">Log Out</button>
         </div>
     </AppLayout>
 </template>
