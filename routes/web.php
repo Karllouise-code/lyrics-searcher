@@ -17,4 +17,6 @@ Route::get('dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 require __DIR__.'/settings.php';
+Route::get('/api/get-lyrics', [App\Http\Controllers\LyricController::class, 'getLyrics']);
+
 require __DIR__.'/auth.php';

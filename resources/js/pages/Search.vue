@@ -15,16 +15,19 @@ const search = async () => {
     error.value = null;
     suggestions.value = [];
     const parts = query.value.trim().split(' ');
-    const artist = parts[0];
-    const title = parts.slice(1).join(' ');
+    let artist = '';
+    let title = '';
 
-    if (!artist || !title) {
-        error.value = 'Please enter both artist and title';
-        return;
+    if (parts.length === 1) {
+        title = parts[0]; // Treat single word as title
+    } else if (parts.length > 1) {
+        artist = parts[0];
+        title = parts.slice(1).join(' ');
     }
 
     try {
         const { data } = await axios.get(`/api/get-lyrics?artist=${encodeURIComponent(artist)}&title=${encodeURIComponent(title)}`);
+
         if (data.lyrics) {
             result.value = { artist, title, lyrics: data.lyrics };
         } else {
@@ -48,8 +51,14 @@ const search = async () => {
             `,
             variables: { query: query.value },
         });
-        suggestions.value = data.data.suggestions;
+        if (data.errors) {
+            error.value = data.errors[0].message;
+            suggestions.value = [];
+        } else {
+            suggestions.value = data.data.suggestions;
+        }
     } catch {
+        error.value = 'Error fetching suggestions';
         suggestions.value = [];
     }
 };
@@ -60,8 +69,9 @@ const addToFavorites = async () => {
         error.value = 'Please log in to add favorites';
         return;
     }
+
     try {
-        await axios.post('/graphql', {
+        const { data } = await axios.post('/graphql', {
             query: `
                 mutation ($artist: String!, $title: String!) {
                     addFavorite(artist: $artist, title: $title) {
@@ -71,16 +81,21 @@ const addToFavorites = async () => {
                     }
                 }
             `,
-            variables: { artist: result.value.artist, title: result.value.title },
+            variables: { artist: result.value.artist || 'Unknown Artist', title: result.value.title },
         });
-    } catch (e: any) {
-        error.value = e.message.includes('authorization') ? 'Please log in to add favorites' : 'Error adding to favorites';
+        if (data.errors) {
+            error.value = data.errors[0].message;
+        } else {
+            error.value = 'Added to favorites';
+        }
+    } catch {
+        error.value = 'Error adding to favorites';
     }
 };
 </script>
 
 <template>
-    <Head title="Searchsda" />
+    <Head title="Search" />
 
     <AppLayout :breadcrumbs="[{ title: 'Search', href: '/' }]">
         <div class="container py-4">
@@ -97,20 +112,31 @@ const addToFavorites = async () => {
                     <button class="btn btn-primary" type="submit">Search</button>
                 </div>
             </form>
-            <div v-if="error" class="alert alert-danger" role="alert">
+            <div
+                v-if="error"
+                class="alert"
+                :class="{ 'alert-danger': error !== 'Added to favorites', 'alert-success': error === 'Added to favorites' }"
+                role="alert"
+            >
                 {{ error }}
             </div>
             <div v-if="suggestions.length" class="mb-4">
                 <h3>Suggestions</h3>
                 <ul class="list-group">
                     <li v-for="suggestion in suggestions" :key="`${suggestion.artist}-${suggestion.title}`" class="list-group-item">
-                        {{ suggestion.artist }} - {{ suggestion.title }}
+                        <template v-if="suggestion.artist">{{ suggestion.artist }}</template>
+                        <template v-if="suggestion.artist && suggestion.title"> - </template>
+                        <template v-if="suggestion.title">{{ suggestion.title }}</template>
                     </li>
                 </ul>
             </div>
             <div v-if="result" class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ result.artist }} - {{ result.title }}</h5>
+                    <h5 class="card-title">
+                        <template v-if="result.artist">{{ result.artist }}</template>
+                        <template v-if="result.artist && result.title"> - </template>
+                        <template v-if="result.title">{{ result.title }}</template>
+                    </h5>
                     <pre class="card-text">{{ result.lyrics }}</pre>
                     <button class="btn btn-primary" :disabled="!user" @click="addToFavorites">Add to Favorites</button>
                 </div>

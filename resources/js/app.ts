@@ -1,14 +1,15 @@
 // import '../css/app.css';
-import '../css/bootstrap-custom.scss';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Add Bootstrap JS
+import '../css/bootstrap-custom.scss';
+import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'LyriSearch';
 
